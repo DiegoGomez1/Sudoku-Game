@@ -4,32 +4,6 @@ square_size = 640 /9
 import pygame
 import sudoku_generator
 import sys
-import pygame
-
-
-
-class Cell:
-    def __init__(self, value, row, col, screen):
-        self.value = value
-        self.row = row
-        self.col = col
-        self.width = 640 / 9
-        self.height = 640 / 9
-        self.screen = screen
-        self.selected = False
-
-    def set_cell_value(self, value):
-        self.value = value
-
-    def draw(self):
-        font = pygame.font.SysFont('Comic Sans MS', 30)
-        val = font.render(str(self.value), True, 'Black')
-        valrectangle = val.get_rect(center = ((640/9)*self.row + (640/9)//2,
-                                    (640 / 9) * self.col + (640 / 9) // 2))
-
-        self.screen.blit(val,valrectangle)
-
-
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
@@ -38,26 +12,7 @@ class Board:
         self.height = height
         self.difficulty = difficulty
         self.board = sudoku_generator.generate_sudoku(9, difficulty)
-        self.cells = [
-            [Cell(self.board[i][j], i,j, screen) for j in range(0,9)]
 
-        for i in range(0,9)
-
-        ]
-        self.replaced = 0
-
-    def emptycells(self):
-        list = []
-        for j in range(9):
-            for i in range(9):
-                if self.board[i][j] == 0:
-                    self.list.append((i,j))
-
-    def replacecheck(self, x, y):
-        if self.board[x][y] == 0:
-            return True
-        else:
-            return False
 
     def clearemptycells(self, list):
         for j in range(9):
@@ -120,28 +75,218 @@ class Board:
                     screen.blit(val, ((110 + i * (640 / 9), 95 + j * 640 / 9)))
         pygame.display.update()
 
+    def checkcolums(self,board):
+        list = []
+        i = 0
+        j = 0
+        k = []
+        while j < 9:
+            i = 0
+            while i < 9:
+                list.append(board[i][j])
+                i += 1
+            list = set(list)
+            if len(list) != 9:
+                list = []
+                k.append(1)
+            else:
+                list = []
+                k.append(0)
+            j += 1
+        if sum(k) == 0:
+            return True
+        else:
+            return False
+
+    def checkrows(self,board):
+        list = []
+        i = 0
+        j = 0
+        k = []
+        while j < 9:
+            i = 0
+            while i < 9:
+                list.append(board[j][i])
+                i += 1
+            list = set(list)
+            if len(list) != 9:
+                list = []
+                k.append(1)
+            else:
+                list = []
+                k.append(0)
+            j += 1
+        if sum(k) == 0:
+            return True
+        else:
+            return False
+
+    def checkboxrow1(self,board):
+        i = 0
+        list = []
+        k = 0
+        y = []
+        while i < 7:
+            j = 0
+            while j < 3:
+                k = 0
+                while k < 3:
+                    list.append(board[j][i + k])
+                    k += 1
+                j += 1
+            list = set(list)
+            if len(list) != 9:
+                list = []
+                y.append(1)
+            else:
+                y.append(0)
+                list = []
+            i += 3
+        if sum(y) == 0:
+            return True
+        else:
+            return False
+
+    def checkboxrow2(self,board):
+        i = 0
+        list = []
+        k = 0
+        y = []
+        while i < 7:
+            j = 0
+            while j < 3:
+                k = 0
+                while k < 3:
+                    list.append(board[j + 3][i + k])
+                    k += 1
+                j += 1
+            list = set(list)
+            if len(list) != 9:
+                list = []
+                y.append(1)
+            else:
+                y.append(0)
+                list = []
+            i += 3
+        if sum(y) == 0:
+            return True
+        else:
+            return False
+
+    def checkboxrow3(self,board):
+        i = 0
+        list = []
+        k = 0
+        y = []
+        while i < 7:
+            j = 0
+            while j < 3:
+                k = 0
+                while k < 3:
+                    list.append(board[j + 6][i + k])
+                    k += 1
+                j += 1
+            list = set(list)
+            if len(list) != 9:
+                list = []
+                y.append(1)
+            else:
+                y.append(0)
+                list = []
+            i += 3
+        if sum(y) == 0:
+            return True
+        else:
+            return False
+
+    def zeroes(self,board):
+        for i in range(9):
+            for j in range(9):
+                if board[i][j]== 0:
+                    return False
+        else:
+            return True
 
 
-
-
-#return true if
-    def check_if_full(self):
-        if 0 in self.board:
+    def checkboard(self,board):
+        list = []
+        if self.zeroes(board) == False:
+            return False
+        if self.checkcolums(board) == False:
+            return False
+        if self.checkrows(board) == False:
+            return False
+        if self.checkboxrow1(board)==False:
+            return False
+        if self.checkboxrow2(board)==False:
+            return False
+        if self.checkboxrow3(board)==False:
             return False
         else:
             return True
 
-'''    def checkifboardvalid(self):
-        if self.board
-'''
 
+def draw_you_lost(screen):
+    screen.fill('black')
+    lostfont = pygame.font.SysFont('Comic Sans MS', 30)
+    losttext = lostfont.render("YOU LOST", 0, 'red')
+    lostsurface = pygame.Surface((losttext.get_size()[0] + 20, losttext.get_size()[1] + 20))
+    lostsurface.fill('white')
+    lostsurface.blit(losttext, (10, 10))
+    lostrectangle = lostsurface.get_rect(center=((400,400)))
+    screen.blit(lostsurface, lostrectangle)
 
+    Restrartfont = pygame.font.SysFont('Comic Sans MS', 30)
+    Restrarttext = Restrartfont.render("Restart", 0, 'black')
+    Restrartsurface = pygame.Surface((Restrarttext.get_size()[0] + 20, Restrarttext.get_size()[1] + 20))
+    Restrartsurface.fill('red')
+    Restrartsurface.blit(Restrarttext, (10, 10))
+    Restrartrectangle = Restrartsurface.get_rect(center=((400), 500))
+    screen.blit(Restrartsurface, Restrartrectangle)
+    losingmenu = True
 
+    while losingmenu is True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if Restrartrectangle.collidepoint(event.pos):
+                    screen.fill('white')
+                    losingmenu = False
+                    return
 
+        pygame.display.update()
 
-pygame.init()
-screen = pygame.display.set_mode((800,800))
-screen.fill('white')
+def youwin(screen):
+    screen.fill('black')
+    lostfont = pygame.font.SysFont('Comic Sans MS', 30)
+    losttext = lostfont.render("YOU WIN", 0, 'blue')
+    lostsurface = pygame.Surface((losttext.get_size()[0] + 20, losttext.get_size()[1] + 20))
+    lostsurface.fill('white')
+    lostsurface.blit(losttext, (10, 10))
+    lostrectangle = lostsurface.get_rect(center=((400, 400)))
+    screen.blit(lostsurface, lostrectangle)
+
+    exitfont = pygame.font.SysFont('Comic Sans MS', 30)
+    exittext = exitfont.render("Exit", 0, 'black')
+    exitsurface = pygame.Surface((exittext.get_size()[0] + 20, exittext.get_size()[1] + 20))
+    exitsurface.fill('red')
+    exitsurface.blit(exittext, (10, 10))
+    exitrectangle = exitsurface.get_rect(center=((400), 500))
+    screen.blit(exitsurface, exitrectangle)
+    winningmenu = True
+
+    while winningmenu is True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if exitrectangle.collidepoint(event.pos):
+                    screen.fill('white')
+                    sys.exit()
+                    return
+
+        pygame.display.update()
 
 def gamestart(screen):
 
@@ -200,16 +345,32 @@ def gamestart(screen):
                     return 50
         pygame.display.update()
 
+
+pygame.init()
+screen = pygame.display.set_mode((800,800))
+screen.fill('white')
 main_menu = True
 in_game = False
+winningmenu = False
+losingmenu = False
 
 while True:
+
     while main_menu is True:
         m = gamestart(screen)
         main_menu = False
         in_game = True
         pygame.display.update()
         i = 0
+    while losingmenu is True:
+        draw_you_lost(screen)
+        losingmenu = False
+        main_menu = True
+        pygame.display.update()
+    while winningmenu is True:
+        youwin(screen)
+        pygame.display.update()
+
     while in_game is True:
 
         while i < 1:
@@ -226,6 +387,7 @@ while True:
                 x,y = event.pos
                 x = int(x / (640 / 9)) - 1
                 y = int(y / (640 / 9)) - 1
+                print(x,y)
                 if (x,y) == (0,9):
                     sys.exit()
                 if (x,y) == (3,9):
@@ -239,9 +401,18 @@ while True:
                     screen.fill('white')
                     template.draw()
                     template.drawcells()
-###check if board is right
                 if (x,y) == (8,9):
-                    pass
+                    if template.checkboard(template.board) is True:
+                        main_menu = False
+                        in_game = False
+                        winningmenu = True
+                    else:
+
+                        losingmenu = True
+                        main_menu = False
+                        in_game = False
+
+
 
             if event.type == pygame.KEYDOWN:
                 if template.board[x][y] == 0 or (x,y) in emptylist:
@@ -299,20 +470,11 @@ while True:
                         template.draw()
                         template.drawcells()
                         emptylist.append((x, y))
-
-
-
-
-
-
-
-
-
-
         template.drawcells()
-        pygame.display.update()
 
 
+
+    pygame.display.update()
 
 
 

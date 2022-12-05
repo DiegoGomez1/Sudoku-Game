@@ -44,8 +44,8 @@ class SudokuGenerator:
                 return True
 
     def is_valid(self, row, col, num):
-        return self.valid_in_row(row,num) and self.valid_in_col(col,num) and \
-               self.valid_in_box(row_start = row - row%3, col_start = col - col%3, num = num)
+        return self.valid_in_row(row, num) and self.valid_in_col(col, num) and \
+               self.valid_in_box(row_start=row - row % 3, col_start=col - col % 3, num=num)
 
     def fill_box(self, row_start, col_start):
         numbers = [1,2,3,4,5,6,7,8,9]
@@ -116,23 +116,3 @@ def generate_sudoku(size, removed):
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
-
-
-
-m= generate_sudoku(9,0)
-
-#Printing a board works
-
-
-#(col // 3) * 3
-
-
-'''def is_valid(self, row, col, num):
-    if not self.valid_in_row(row, num):
-        return False
-    elif not self.valid_in_col(col, num):
-        return False
-    elif not self.valid_in_box(row_start=row - row % 3, col_start=col - col % 3, num=num):
-        return False
-    else:
-        return True'''
