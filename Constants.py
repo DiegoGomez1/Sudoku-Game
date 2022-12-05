@@ -66,13 +66,17 @@ class Board:
         screen.blit(Donesurface, Donerectangle)
         pygame.display.update()
 
-    def drawcells(self):
+    def drawcells(self, list):
         font = pygame.font.SysFont('Comic Sans MS', 30)
         for i in range(0, 9):
             for j in range(0, 9):
                 if self.board[i][j] != 0:
                     val = font.render(str(self.board[i][j]), True, 'black')
                     screen.blit(val, ((110 + i * (640 / 9), 95 + j * 640 / 9)))
+                if (i,j) in list:
+                    if self.board[i][j] != 0:
+                        val = font.render(str(self.board[i][j]), True, 'red')
+                        screen.blit(val, ((110 + i * (640 / 9), 95 + j * 640 / 9)))
         pygame.display.update()
 
     def checkcolums(self,board):
@@ -374,11 +378,12 @@ while True:
     while in_game is True:
 
         while i < 1:
+            list =[]
             emptylist =[]
             screen.fill('white')
             template = Board(800, 800, screen, m)
             template.draw()
-            template.drawcells()
+            template.drawcells(list)
             i +=1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -387,7 +392,6 @@ while True:
                 x,y = event.pos
                 x = int(x / (640 / 9)) - 1
                 y = int(y / (640 / 9)) - 1
-                print(x,y)
                 if (x,y) == (0,9):
                     sys.exit()
                 if (x,y) == (3,9):
@@ -400,7 +404,7 @@ while True:
                                 template.board[i][j] = 0
                     screen.fill('white')
                     template.draw()
-                    template.drawcells()
+                    template.drawcells(emptylist)
                 if (x,y) == (8,9):
                     if template.checkboard(template.board) is True:
                         main_menu = False
@@ -420,57 +424,57 @@ while True:
                         template.board[x][y]=1
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x,y))
                     elif event.key == pygame.K_2:
                         template.board[x][y]=2
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_3:
                         template.board[x][y] = 3
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_4:
                         template.board[x][y]= 4
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_5:
                         template.board[x][y]= 5
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_6:
                         template.board[x][y]= 6
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_7:
                         template.board[x][y]= 7
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_8:
                         template.board[x][y]= 8
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_9:
                         template.board[x][y]= 9
                         screen.fill('white')
                         template.draw()
-                        template.drawcells()
+                        template.drawcells(emptylist)
                         emptylist.append((x, y))
-        template.drawcells()
+        template.drawcells(emptylist)
 
 
 
