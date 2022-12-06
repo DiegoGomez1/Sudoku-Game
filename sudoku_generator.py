@@ -40,8 +40,8 @@ class SudokuGenerator:
             for box_col in range(0, 3):
                 if num == self.board[row_start+box_row][col_start+box_col]:
                     return False
-            else:
-                return True
+        else:
+            return True
 
     def is_valid(self, row, col, num):
         return self.valid_in_row(row, num) and self.valid_in_col(col, num) and \
