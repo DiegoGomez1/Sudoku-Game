@@ -75,7 +75,7 @@ class Board:
                     screen.blit(val, ((110 + i * (640 / 9), 95 + j * 640 / 9)))
                 if (i,j) in list:
                     if self.board[i][j] != 0:
-                        val = font.render(str(self.board[i][j]), True, 'red')
+                        val = font.render(str(self.board[i][j]), True, 'blue')
                         screen.blit(val, ((110 + i * (640 / 9), 95 + j * 640 / 9)))
         pygame.display.update()
 
@@ -479,6 +479,8 @@ while True:
 
 
     pygame.display.update()
+
+
 
 
 
