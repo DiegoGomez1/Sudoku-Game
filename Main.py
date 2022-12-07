@@ -1,10 +1,12 @@
 width = 800
 height = 800
-square_size = 640 /9
+square_size = 640 / 9
 import pygame
 import sudoku_generator
 import sys
 
+
+# Constructor for the SudokuGenerator class. For the purposes of this project, row_length is always 9. removed_cells could vary depending on the difficulty level chosen (see “UI Requirements”).
 class Board:
     def __init__(self, width, height, screen, difficulty):
         self.screen = screen
@@ -13,14 +15,14 @@ class Board:
         self.difficulty = difficulty
         self.board = sudoku_generator.generate_sudoku(9, difficulty)
 
-
     def clearemptycells(self, list):
         for j in range(9):
             for i in range(9):
-                if (i,j) in list:
+                if (i, j) in list:
                     self.board[i][j] = 0
 
     def draw(self):
+        # creates the black board of cells and squares
         pygame.draw.line(self.screen, 'black', (80, 720), (720, 720), 4)
         pygame.draw.line(self.screen, 'black', (80, 80), (80, 720), 4)
         pygame.draw.line(self.screen, 'black', (720, 720), (720, 80), 4)
@@ -39,7 +41,7 @@ class Board:
         exitsurface.blit(exittext, (10, 10))
         exitrectangle = exitsurface.get_rect(center=((720 - 5 * 640 / 9) / 3, 760))
         screen.blit(exitsurface, exitrectangle)
-
+        # here is where the reset button is made
         resetfont = pygame.font.SysFont('Comic Sans MS', 30)
         resettext = resetfont.render("Reset", 0, 'white')
         resetsurface = pygame.Surface((resettext.get_size()[0] + 20, resettext.get_size()[1] + 20))
@@ -56,7 +58,7 @@ class Board:
         Restrartrectangle = Restrartsurface.get_rect(center=((720 - (-4) * 640 / 9) / 3, 760))
         screen.blit(Restrartsurface, Restrartrectangle)
         pygame.display.update()
-
+        # here is wehre the Done button is made
         Donefont = pygame.font.SysFont('Comic Sans MS', 30)
         Donetext = Donefont.render("Done", 0, 'white')
         Donesurface = pygame.Surface((Donetext.get_size()[0] + 20, Donetext.get_size()[1] + 20))
@@ -73,13 +75,14 @@ class Board:
                 if self.board[i][j] != 0:
                     val = font.render(str(self.board[i][j]), True, 'black')
                     screen.blit(val, ((110 + i * (640 / 9), 95 + j * 640 / 9)))
-                if (i,j) in list:
+                if (i, j) in list:
                     if self.board[i][j] != 0:
                         val = font.render(str(self.board[i][j]), True, 'blue')
                         screen.blit(val, ((110 + i * (640 / 9), 95 + j * 640 / 9)))
         pygame.display.update()
 
-    def checkcolums(self,board):
+    # this method checks if a digit is repeated in a column
+    def checkcolums(self, board):
         list = []
         i = 0
         j = 0
@@ -102,7 +105,8 @@ class Board:
         else:
             return False
 
-    def checkrows(self,board):
+    # this method checks if a digit is repeated in a row
+    def checkrows(self, board):
         list = []
         i = 0
         j = 0
@@ -125,7 +129,8 @@ class Board:
         else:
             return False
 
-    def checkboxrow1(self,board):
+    def checkboxrow1(self, board):
+        # checks the input
         i = 0
         list = []
         k = 0
@@ -151,7 +156,8 @@ class Board:
         else:
             return False
 
-    def checkboxrow2(self,board):
+    def checkboxrow2(self, board):
+        # checks input in row 2
         i = 0
         list = []
         k = 0
@@ -177,7 +183,8 @@ class Board:
         else:
             return False
 
-    def checkboxrow3(self,board):
+    def checkboxrow3(self, board):
+        # checks input of row 3
         i = 0
         list = []
         k = 0
@@ -203,16 +210,15 @@ class Board:
         else:
             return False
 
-    def zeroes(self,board):
+    def zeroes(self, board):
         for i in range(9):
             for j in range(9):
-                if board[i][j]== 0:
+                if board[i][j] == 0:
                     return False
         else:
             return True
 
-
-    def checkboard(self,board):
+    def checkboard(self, board):
         list = []
         if self.zeroes(board) == False:
             return False
@@ -220,24 +226,27 @@ class Board:
             return False
         if self.checkrows(board) == False:
             return False
-        if self.checkboxrow1(board)==False:
+        if self.checkboxrow1(board) == False:
             return False
-        if self.checkboxrow2(board)==False:
+        if self.checkboxrow2(board) == False:
             return False
-        if self.checkboxrow3(board)==False:
+        if self.checkboxrow3(board) == False:
             return False
         else:
             return True
 
 
 def draw_you_lost(screen):
+    # sets up the losing screen
     screen.fill('black')
     lostfont = pygame.font.SysFont('Comic Sans MS', 30)
+    # font
     losttext = lostfont.render("YOU LOST", 0, 'red')
+    # losing screen message
     lostsurface = pygame.Surface((losttext.get_size()[0] + 20, losttext.get_size()[1] + 20))
     lostsurface.fill('white')
     lostsurface.blit(losttext, (10, 10))
-    lostrectangle = lostsurface.get_rect(center=((400,400)))
+    lostrectangle = lostsurface.get_rect(center=((400, 400)))
     screen.blit(lostsurface, lostrectangle)
 
     Restrartfont = pygame.font.SysFont('Comic Sans MS', 30)
@@ -261,10 +270,13 @@ def draw_you_lost(screen):
 
         pygame.display.update()
 
+
 def youwin(screen):
+    # prints winning screen
     screen.fill('black')
     lostfont = pygame.font.SysFont('Comic Sans MS', 30)
     losttext = lostfont.render("YOU WIN", 0, 'blue')
+    # winning message
     lostsurface = pygame.Surface((losttext.get_size()[0] + 20, losttext.get_size()[1] + 20))
     lostsurface.fill('white')
     lostsurface.blit(losttext, (10, 10))
@@ -292,44 +304,47 @@ def youwin(screen):
 
         pygame.display.update()
 
-def gamestart(screen):
 
+def gamestart(screen):
+    # prints the opening screen/menu
     titlefont = pygame.font.Font(None, 100)
     buttonfont = pygame.font.Font(None, 100)
 
     screen.fill('white')
 
     titlesurface = titlefont.render("Sudoku", 0, 'Black')
-    buttonsurface = titlesurface.get_rect( center = (800 // 2, 800 //2 - 200))
+    buttonsurface = titlesurface.get_rect(center=(800 // 2, 800 // 2 - 200))
     screen.blit(titlesurface, buttonsurface)
-
+    # this is where the easy button is made
     easytext = buttonfont.render("Easy", 0, 'white')
     mediumtext = buttonfont.render("Medium", 0, 'white')
     hardtext = buttonfont.render("Hard", 0, 'white')
 
-    easysurface = pygame.Surface((easytext.get_size()[0]+20,
-                                  easytext.get_size()[1]+20))
+    easysurface = pygame.Surface((easytext.get_size()[0] + 20,
+                                  easytext.get_size()[1] + 20))
     easysurface.fill('black')
-    easysurface.blit(easytext,(10,10))
+    easysurface.blit(easytext, (10, 10))
 
+    # this is where the medium button is made
     mediumsurface = pygame.Surface((mediumtext.get_size()[0]
                                     + 20, mediumtext.get_size()[1] + 20))
     mediumsurface.fill('black')
     mediumsurface.blit(mediumtext, (10, 10))
 
+    # this is where the hard button is made
     hardsurface = pygame.Surface((hardtext.get_size()[0] + 20,
                                   hardtext.get_size()[1] + 20))
     hardsurface.fill('black')
     hardsurface.blit(hardtext, (10, 10))
 
-    easyrectangle = easysurface.get_rect(center = (800//2, (800/2) +100))
-    mediumrectangle = mediumsurface.get_rect(center=(800//2, 800/2 + 200))
-    hardrectangle = hardsurface.get_rect(center=(800//2, 800/2 + 300))
+    easyrectangle = easysurface.get_rect(center=(800 // 2, (800 / 2) + 100))
+    mediumrectangle = mediumsurface.get_rect(center=(800 // 2, 800 / 2 + 200))
+    hardrectangle = hardsurface.get_rect(center=(800 // 2, 800 / 2 + 300))
 
     screen.blit(easysurface, easyrectangle)
     screen.blit(mediumsurface, mediumrectangle)
     screen.blit(hardsurface, hardrectangle)
-    main_menu= True
+    main_menu = True
     while main_menu is True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -351,7 +366,7 @@ def gamestart(screen):
 
 
 pygame.init()
-screen = pygame.display.set_mode((800,800))
+screen = pygame.display.set_mode((800, 800))
 screen.fill('white')
 main_menu = True
 in_game = False
@@ -359,7 +374,8 @@ winningmenu = False
 losingmenu = False
 
 while True:
-
+    # shows sudoku board again if the menu menu is shown once the game restarts
+    # the main menu shows when game restarts
     while main_menu is True:
         m = gamestart(screen)
         main_menu = False
@@ -378,26 +394,27 @@ while True:
     while in_game is True:
 
         while i < 1:
-            list =[]
-            emptylist =[]
+            list = []
+            emptylist = []
             screen.fill('white')
             template = Board(800, 800, screen, m)
             template.draw()
             template.drawcells(list)
-            i +=1
+            i += 1
+        # this is where the quit button is implemented
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                x,y = event.pos
+                x, y = event.pos
                 x = int(x / (640 / 9)) - 1
                 y = int(y / (640 / 9)) - 1
-                if (x,y) == (0,9):
+                if (x, y) == (0, 9):
                     sys.exit()
-                if (x,y) == (3,9):
-                    in_game  = False
+                if (x, y) == (3, 9):
+                    in_game = False
                     main_menu = True
-                if (x,y) == (1,9):
+                if (x, y) == (1, 9):
                     for j in range(9):
                         for i in range(9):
                             if (i, j) in emptylist:
@@ -405,7 +422,7 @@ while True:
                     screen.fill('white')
                     template.draw()
                     template.drawcells(emptylist)
-                if (x,y) == (8,9):
+                if (x, y) == (8, 9):
                     if template.checkboard(template.board) is True:
                         main_menu = False
                         in_game = False
@@ -416,18 +433,18 @@ while True:
                         main_menu = False
                         in_game = False
 
-
-
             if event.type == pygame.KEYDOWN:
-                if template.board[x][y] == 0 or (x,y) in emptylist:
+                if template.board[x][y] == 0 or (x, y) in emptylist:
                     if event.key == pygame.K_1:
-                        template.board[x][y]=1
+                        template.board[x][y] = 1
                         screen.fill('white')
+                        # creates the white background screen
+
                         template.draw()
                         template.drawcells(emptylist)
-                        emptylist.append((x,y))
+                        emptylist.append((x, y))
                     elif event.key == pygame.K_2:
-                        template.board[x][y]=2
+                        template.board[x][y] = 2
                         screen.fill('white')
                         template.draw()
                         template.drawcells(emptylist)
@@ -439,47 +456,44 @@ while True:
                         template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_4:
-                        template.board[x][y]= 4
+                        template.board[x][y] = 4
                         screen.fill('white')
                         template.draw()
                         template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_5:
-                        template.board[x][y]= 5
+                        template.board[x][y] = 5
                         screen.fill('white')
                         template.draw()
                         template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_6:
-                        template.board[x][y]= 6
+                        template.board[x][y] = 6
                         screen.fill('white')
                         template.draw()
                         template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_7:
-                        template.board[x][y]= 7
+                        template.board[x][y] = 7
                         screen.fill('white')
                         template.draw()
                         template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_8:
-                        template.board[x][y]= 8
+                        template.board[x][y] = 8
                         screen.fill('white')
                         template.draw()
                         template.drawcells(emptylist)
                         emptylist.append((x, y))
                     elif event.key == pygame.K_9:
-                        template.board[x][y]= 9
+                        template.board[x][y] = 9
                         screen.fill('white')
                         template.draw()
                         template.drawcells(emptylist)
                         emptylist.append((x, y))
         template.drawcells(emptylist)
 
-
-
     pygame.display.update()
-
 
 
 
